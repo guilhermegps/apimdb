@@ -10,21 +10,39 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import br.com.apimdb.integration.MovieDBAPI;
 import br.com.apimdb.model.dto.TokenResponseDTO;
+import retrofit2.Call;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.jackson.JacksonConverterFactory;
 
 @SpringBootTest
 public class MovieDBServiceTest {
 	@Value("${api.moviedb.key}")
 	private String KEY;
-	@Autowired
-	private MovieDBService movieDBService;
 
 	@Test
-	void criarToken() throws IOException {
+	void keyValida() throws IOException {
 		assertNotNull(KEY);
-		TokenResponseDTO token = movieDBService.criarToken();
-		assertNotNull(token);
-		assertEquals(true, token.isSucesso());
+	}
+	
+	private MovieDBAPI getApi() {
+		Retrofit retrofit = new Retrofit.Builder()
+				.baseUrl("https://api.themoviedb.org/")
+				.addConverterFactory(JacksonConverterFactory.create())
+				.build();
+		return retrofit.create(MovieDBAPI.class);
 	}
 
+	@Test
+	void pedindoTokenSemKey() throws IOException {
+		MovieDBAPI api = getApi();
+		
+		Call<TokenResponseDTO> cotacao = api.createToken("");
+		Response<TokenResponseDTO> response = cotacao.execute();
+		
+		assertEquals(false, response.isSuccessful());
+		assertNotNull(response.errorBody());		
+	}
 }
