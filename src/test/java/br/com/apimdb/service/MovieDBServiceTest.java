@@ -21,10 +21,16 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 public class MovieDBServiceTest {
 	@Value("${api.moviedb.key}")
 	private String KEY;
+	@Value("${api.moviedb.user}")
+	private String USER;
+	@Value("${api.moviedb.passwd}")
+	private String PASSWD;
 
 	@Test
-	void keyValida() throws IOException {
+	void dadosAutenticacaoValidos() throws IOException {
 		assertNotNull(KEY);
+		assertNotNull(USER);
+		assertNotNull(PASSWD);
 	}
 	
 	private MovieDBAPI getApi() {

@@ -2,9 +2,12 @@ package br.com.apimdb.controller;
 
 
 import java.io.IOException;
+import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,7 +26,7 @@ public class MovieDBController {
 	@Autowired
 	private MovieDBService movieDBService;
 	
-	@GetMapping
+	@GetMapping("/token")
 	public Object criarToken() {
 		TokenResponseDTO responseDTO = null;
 		try {
@@ -38,10 +41,12 @@ public class MovieDBController {
 		return null;
 	}
 	
-	@GetMapping
+	@PostMapping("/sessao")
 	public Object criarSessao(AuthenticationDTO param) {
 		SessionResponseDTO responseDTO = null;
 		try {
+			if(StringUtils.isBlank(param.getToken()))
+				param.setToken(movieDBService.criarToken().getToken());
 			responseDTO = movieDBService.criarSessao(param);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -51,6 +56,18 @@ public class MovieDBController {
 			return responseDTO;
 					
 		return null;
+	}
+	
+	@GetMapping("/dados/conta")
+	public Object dadosConta() {
+		Map<String, Object> responseDTO = null;
+		try {
+			responseDTO = movieDBService.dadosConta();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+					
+		return responseDTO;
 	}
 
 }

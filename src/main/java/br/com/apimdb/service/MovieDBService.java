@@ -1,6 +1,7 @@
 package br.com.apimdb.service;
 
 import java.io.IOException;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -77,5 +78,23 @@ public class MovieDBService extends SendDataService<Object> {
 			return oMapper.readValue(response.errorBody().string(), SessionResponseDTO.class);
 
 		throw new IOException("Falha ao obter sessão");
+	}
+	
+	public SessionResponseDTO gerarSessao() throws IOException{
+		return criarSessao(AuthenticationDTO.builder()
+				.username(USER)
+				.password(PASSWD)
+				.token(criarToken().getToken())
+				.build());
+	}
+	
+	public Map<String, Object> dadosConta() throws IOException{
+		SessionResponseDTO sessao = gerarSessao();
+		Call<Map<String, Object>> rb = this.api.account(KEY, sessao.getSessionId());
+		Response<Map<String, Object>> response = rb.execute();
+		if (response.isSuccessful())
+	        return oMapper.convertValue(response.body(), Map.class);
+
+		throw new IOException("Falha ao obter dados da conta");
 	}
 }

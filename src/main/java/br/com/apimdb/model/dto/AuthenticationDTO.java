@@ -1,7 +1,5 @@
 package br.com.apimdb.model.dto;
 
-import org.springframework.web.bind.annotation.RequestParam;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
