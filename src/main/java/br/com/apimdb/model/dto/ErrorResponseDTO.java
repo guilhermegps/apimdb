@@ -21,4 +21,8 @@ public class ErrorResponseDTO {
 	protected String statusMessage;
 	@JsonProperty("success")
 	protected Boolean success;
+	@JsonProperty("failure")
+	protected Boolean failure;
+	@JsonProperty("error")
+	protected String error;
 }
