@@ -2,7 +2,9 @@ package br.com.apimdb.service;
 
 import java.io.IOException;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.annotation.RequestScope;
 
@@ -22,8 +24,6 @@ import retrofit2.Response;
 public class MovieDBService extends SendDataService<Object> {
 	@Value("${api.moviedb.key}")
 	private String KEY;
-//	@Value("${api.moviedb.url}")
-//	private static String URL;
 	
 	private MovieDBAPI api;
 	private final ObjectMapper oMapper = new ObjectMapper();
