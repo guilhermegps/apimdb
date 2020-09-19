@@ -43,6 +43,12 @@ public class MovieDBService extends SendDataService<Object> {
 		this.api = super.createApi(MovieDBAPI.class);
 	}
 	
+	/**
+	 * Retorna um token temporario
+	 * 
+	 * @return TokenResponseDTO
+	 * @throws IOException
+	 */
 	public TokenResponseDTO criarToken() throws IOException{
 		Call<TokenResponseDTO> token = api.createToken(KEY);
 		Response<TokenResponseDTO> response = token.execute();
@@ -55,6 +61,14 @@ public class MovieDBService extends SendDataService<Object> {
 		throw new IOException("Falha ao obter token");
 	}
 	
+	
+	/**
+	 * Valida Token com dados de Login
+	 * 
+	 * @param param
+	 * @return
+	 * @throws IOException
+	 */
 	public TokenResponseDTO validarComLogin(AuthenticationDTO param) throws IOException{
 		Call<TokenResponseDTO> token = api.validateWithLogin(KEY, param);
 		Response<TokenResponseDTO> response = token.execute();
@@ -67,6 +81,13 @@ public class MovieDBService extends SendDataService<Object> {
 		throw new IOException("Falha ao obter token");
 	}
 	
+	/**
+	 * Cria a sessão com dados de autenticação especificos
+	 * 
+	 * @param param
+	 * @return SessionResponseDTO
+	 * @throws IOException
+	 */
 	public SessionResponseDTO criarSessao(AuthenticationDTO param) throws IOException{
 		validarComLogin(param);
 		Call<SessionResponseDTO> sessao = api.createNewSession(KEY, param);
@@ -80,6 +101,12 @@ public class MovieDBService extends SendDataService<Object> {
 		throw new IOException("Falha ao obter sessão");
 	}
 	
+	/**
+	 * Gera a sessão com dados de autenticação default
+	 * 
+	 * @return SessionResponseDTO
+	 * @throws IOException
+	 */
 	public SessionResponseDTO gerarSessao() throws IOException{
 		return criarSessao(AuthenticationDTO.builder()
 				.username(USER)
@@ -88,6 +115,12 @@ public class MovieDBService extends SendDataService<Object> {
 				.build());
 	}
 	
+	/**
+	 * Retorna um Map com os dados da conta
+	 * 
+	 * @return Map<String, Object>
+	 * @throws IOException
+	 */
 	public Map<String, Object> dadosConta() throws IOException{
 		SessionResponseDTO sessao = gerarSessao();
 		Call<Map<String, Object>> rb = this.api.account(KEY, sessao.getSessionId());
